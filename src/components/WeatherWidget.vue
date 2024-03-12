@@ -6,7 +6,7 @@
                 <p>Loading...</p>
             </div>
             <div v-else-if="error">
-                <p>{{ errorMessage }}</p>
+                <p>{{ error }}</p>
             </div> 
             <div v-else>
                 <p class="temperature">{{ weather.temperature }}°{{ temperatureUnit }}</p>
@@ -73,7 +73,12 @@ export default {
                     windSpeed: currentWeather.windSpeed
                 };
             } catch (error) {
-                this.error = 'Failed to fetch weather data. Please try again later.';
+                if(error.response && error.response.status === 429) {
+                    this.error = 'Failed to fetch weather data due to rate limiting. Please try again later.';
+                }
+                else {
+                    this.error = 'Failed to fetch weather data. Please try again later.';
+                }
             } finally {
                 this.loading = false;
             }
