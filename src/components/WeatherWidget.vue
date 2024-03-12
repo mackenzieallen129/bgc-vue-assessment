@@ -1,6 +1,6 @@
 <template>
     <div class="weather-widget card bg-secondary text-white text-center mx-auto" style="max-width: 300px;">
-        <div class="card-body">
+        <div class="card-body" @mouseenter="showAdditionalData = true" @mouseleave="showAdditionalData = false">
             <h2>{{ locationName }}</h2>
             <div v-if="loading">
                 <p>Loading...</p>
@@ -11,6 +11,13 @@
             <div v-else>
                 <p class="temperature">{{ weather.temperature }}°{{ temperatureUnit }}</p>
                 <p class="weather"><i>Conditions:</i> {{ weather.weatherDescription }}</p>
+            
+                <div v-if="showAdditionalData" class="additional-data">
+                    <p>Feels Like: <span class="value">{{ weather.temperatureApparent }}°{{ temperatureUnit }}</span></p>
+                    <p>Humidity: <span class="value">{{ weather.humidity }}%</span></p>
+                    <p>UV Index: <span class="value">{{ weather.uvIndex }}</span></p>
+                    <p>Wind Speed: <span class="value">{{ weather.windSpeed }} mph</span></p>
+                </div>
             </div>
         </div>
   </div>
@@ -26,7 +33,8 @@ export default {
             temperatureUnit: 'F',
             weather: null,
             loading: true,
-            error: ''
+            error: '',
+            showAdditionalData: false
         };
     },
     mounted() {
@@ -36,7 +44,7 @@ export default {
         async getLocalWeather() {
             const apiKey = 'kLMmv1mzAVsMUWA84cRVZuLn7CwSX4HZ';
             const cityName = 'boston';
-            const url = `https://api.tomorrow.io/v4/timelines?location=${cityName}&fields=temperature,weatherCode&units=imperial&timesteps=current&apikey=${apiKey}`;
+            const url = `https://api.tomorrow.io/v4/timelines?location=${cityName}&fields=humidity,temperature,temperatureApparent,uvIndex,weatherCode,windSpeed&units=imperial&timesteps=current&apikey=${apiKey}`;
 
             try {
                 const response = await axios.get(url);
@@ -45,9 +53,15 @@ export default {
                     throw new Error('Failed to fetch weather data');
                 }
                 const currentWeather = data.data.timelines[0].intervals[0].values;
+                const temperature = parseFloat(currentWeather.temperature).toFixed(1);
+                const temperatureApparent = parseFloat(currentWeather.temperatureApparent).toFixed(1);
                 this.weather = {
-                    temperature: currentWeather.temperature,
-                    weatherDescription: this.getWeatherDescription(currentWeather.weatherCode)
+                    humidity: currentWeather.humidity,
+                    temperature: temperature,
+                    temperatureApparent: temperatureApparent,
+                    uvIndex: currentWeather.uvIndex,
+                    weatherDescription: this.getWeatherDescription(currentWeather.weatherCode),
+                    windSpeed: currentWeather.windSpeed
                 };
             } catch (error) {
                 this.error = 'Failed to fetch weather data. Please try again later.';
@@ -99,5 +113,17 @@ export default {
     font-size: 50px;
     font-weight: bold;
     color: lightskyblue;
+}
+.value {
+    color: lightskyblue;
+}
+.additional-data {
+  background-color: black;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+}
+.additional-data p {
+  margin: 0;
 }
 </style>
