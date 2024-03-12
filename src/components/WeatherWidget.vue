@@ -1,5 +1,5 @@
 <template>
-    <div class="weather-widget card text-white text-center mx-auto" style="max-width: 300px;">
+    <div class="weather-widget card text-white text-center mb-5 mx-auto" style="max-width: 300px;">
         <div class="card-body" @mouseenter="showAdditionalData = true" @mouseleave="showAdditionalData = false">
             <h2>{{ locationName }}</h2>
             <div v-if="loading">
@@ -50,7 +50,7 @@ export default {
     },
     methods: {
         async getLocalWeather() {
-            const apiKey = 'chDNX3BRcZp5vLqJzJgVjnNR8UdXShFQ';
+            const apiKey = 'kLMmv1mzAVsMUWA84cRVZuLn7CwSX4HZ';
             const cityName = 'boston';
             const url = `https://api.tomorrow.io/v4/timelines?location=${cityName}&fields=humidity,temperature,temperatureApparent,uvIndex,weatherCode,windSpeed&units=imperial&timesteps=current&apikey=${apiKey}`;
 
@@ -61,8 +61,8 @@ export default {
                     throw new Error('Failed to fetch weather data');
                 }
                 const currentWeather = data.data.timelines[0].intervals[0].values;
-                const temperature = parseFloat(currentWeather.temperature).toFixed(1);
-                const temperatureApparent = parseFloat(currentWeather.temperatureApparent).toFixed(1);
+                const temperature = Math.round(parseFloat(currentWeather.temperature));
+                const temperatureApparent = Math.round(parseFloat(currentWeather.temperatureApparent));
                 this.weather = {
                     humidity: currentWeather.humidity,
                     temperature: temperature,

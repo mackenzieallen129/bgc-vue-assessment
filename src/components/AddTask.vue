@@ -1,5 +1,5 @@
 <template>
-    <h2>To-Do Items</h2>
+    <h2 class="heading">To-Do Items</h2>
     <div class="input-group mb-3">
         <input type="text" v-model="newTask" @keydown.enter="addTask" class="form-control" placeholder="Add a new task">
         <button @click="addTask" class="btn btn-primary"><i class="fas fa-plus"></i></button>

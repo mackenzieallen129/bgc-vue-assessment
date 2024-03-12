@@ -1,8 +1,9 @@
 <template>
-  <div class="container mt-5" style="font-family: Verdana, Geneva, sans-serif;">
+  <div class="container mt-5" style="font-family: Georgia,Times,Times New Roman,serif;">
+    <h1 class="text-center mb-5"><b>Day at a Glance</b></h1>
     <div class="row"> 
-      <div class="col-md-8 card p-3">
-        <h1 class="mb-4 text-center">Today's Tasks</h1>
+      <div class="col-md-8 mb-5 card blue-border p-3 background">
+        <h1 class="mb-4 text-center heading">Today's Tasks</h1>
         <add-task @taskAdded="addTask"></add-task>
         <task-list :tasks="tasks" @taskEdited="editTask" @taskDeleted="deleteTask" @taskCompleted="completeTask"></task-list>
         <completed-task-list :tasks="completedTasks" @deleteCompletedTask="deleteCompletedTask"></completed-task-list>
@@ -61,3 +62,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.background {
+  background-color: #C8DFEA!important;
+}
+.heading {
+  color: darkblue;
+}
+</style>

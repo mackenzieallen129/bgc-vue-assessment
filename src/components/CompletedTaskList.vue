@@ -1,6 +1,6 @@
 <template>
     <div v-if="tasks.length">
-        <h2 class="mt-5">Completed Items</h2>
+        <h2 class="mt-5 heading">Completed Items</h2>
         <ul class="list-group">
             <li v-for="(task, index) in tasks" :key="index" class="list-group-item d-flex justify-content-between align-items-center">
                 <div>{{ task.name }}</div>
