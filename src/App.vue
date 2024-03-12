@@ -4,6 +4,7 @@
     <add-task @taskAdded="addTask"></add-task>
     <task-list :tasks="tasks" @taskEdited="editTask" @taskDeleted="deleteTask" @taskCompleted="completeTask"></task-list>
     <completed-task-list :tasks="completedTasks" @deleteCompletedTask="deleteCompletedTask"></completed-task-list>
+    <weather-widget />
   </div>
 </template>
 
@@ -11,6 +12,7 @@
 import AddTask from "./components/AddTask.vue";
 import TaskList from "./components/TaskList.vue";
 import CompletedTaskList from "./components/CompletedTaskList.vue";
+import WeatherWidget from './components/WeatherWidget.vue';
 
 export default {
   name: "App",
@@ -18,6 +20,7 @@ export default {
     AddTask,
     TaskList,
     CompletedTaskList,
+    WeatherWidget,
   },
   data() {
     return {
