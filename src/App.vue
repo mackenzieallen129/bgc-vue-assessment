@@ -1,10 +1,16 @@
 <template>
   <div class="container mt-5">
-    <h2 class="mb-4">To-Do Items</h2>
-    <add-task @taskAdded="addTask"></add-task>
-    <task-list :tasks="tasks" @taskEdited="editTask" @taskDeleted="deleteTask" @taskCompleted="completeTask"></task-list>
-    <completed-task-list :tasks="completedTasks" @deleteCompletedTask="deleteCompletedTask"></completed-task-list>
-    <weather-widget />
+    <div class="row"> 
+      <div class="col-md-8 card p-3 ">
+        <h1 class="mb-4 text-center">Today's Tasks</h1>
+        <add-task @taskAdded="addTask"></add-task>
+        <task-list :tasks="tasks" @taskEdited="editTask" @taskDeleted="deleteTask" @taskCompleted="completeTask"></task-list>
+        <completed-task-list :tasks="completedTasks" @deleteCompletedTask="deleteCompletedTask"></completed-task-list>
+      </div>
+      <div class="col-md-4">
+       <weather-widget />
+      </div>
+    </div>
   </div>
 </template>
 
