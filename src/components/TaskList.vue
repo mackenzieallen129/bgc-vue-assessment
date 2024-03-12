@@ -14,8 +14,8 @@
                     </div>
                 </div>
                 <div v-if="index !== editingIndex" class="btn-group" role="group">
-                    <button @click="startEditing(index)" class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i></button>
-                    <button @click="deleteTask(index)" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                    <button @click="startEditing(index)" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i></button>
+                    <button @click="deleteTask(index)" class="btn btn-outline-dark btn-sm"><i class="fas fa-trash-alt"></i></button>
                 </div>
             </li>
         </ul>

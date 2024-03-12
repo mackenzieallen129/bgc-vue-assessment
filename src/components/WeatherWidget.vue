@@ -1,5 +1,5 @@
 <template>
-    <div class="weather-widget card bg-secondary text-white text-center mx-auto" style="max-width: 300px;">
+    <div class="weather-widget card text-white text-center mx-auto" style="max-width: 300px;">
         <div class="card-body" @mouseenter="showAdditionalData = true" @mouseleave="showAdditionalData = false">
             <h2>{{ locationName }}</h2>
             <div v-if="loading">
@@ -10,7 +10,10 @@
             </div> 
             <div v-else>
                 <p class="temperature">{{ weather.temperature }}°{{ temperatureUnit }}</p>
-                <p class="weather"><i>Conditions:</i> {{ weather.weatherDescription }}</p>
+                <div v-if="weather.weatherDescription" class="weather-image">
+                    <img :src="getWeatherImage(weather.weatherCode)" />
+                </div>
+                <p class="weather mt-2">{{ weather.weatherDescription }}</p>
             
                 <div v-if="showAdditionalData" class="additional-data">
                     <p>Feels Like: <span class="value">{{ weather.temperatureApparent }}°{{ temperatureUnit }}</span></p>
@@ -25,16 +28,21 @@
 
 <script>
 import axios from 'axios';
+import sunImage from '@/assets/sun.png';
+import partlyCloudyImage from '@/assets/partly-cloudy.png';
+import cloudyImage from '@/assets/cloudy.png';
+import rainImage from '@/assets/rain.png';
+import snowImage from '@/assets/snow.png';
 
 export default {
     data() {
         return {
-            locationName: 'Boston, MA',
+            locationName: 'Boston',
             temperatureUnit: 'F',
             weather: null,
             loading: true,
             error: '',
-            showAdditionalData: false
+            showAdditionalData: false,
         };
     },
     mounted() {
@@ -42,7 +50,7 @@ export default {
     },
     methods: {
         async getLocalWeather() {
-            const apiKey = 'kLMmv1mzAVsMUWA84cRVZuLn7CwSX4HZ';
+            const apiKey = 'chDNX3BRcZp5vLqJzJgVjnNR8UdXShFQ';
             const cityName = 'boston';
             const url = `https://api.tomorrow.io/v4/timelines?location=${cityName}&fields=humidity,temperature,temperatureApparent,uvIndex,weatherCode,windSpeed&units=imperial&timesteps=current&apikey=${apiKey}`;
 
@@ -60,6 +68,7 @@ export default {
                     temperature: temperature,
                     temperatureApparent: temperatureApparent,
                     uvIndex: currentWeather.uvIndex,
+                    weatherCode: currentWeather.weatherCode,
                     weatherDescription: this.getWeatherDescription(currentWeather.weatherCode),
                     windSpeed: currentWeather.windSpeed
                 };
@@ -73,7 +82,7 @@ export default {
             //got information on weather codes from tomorrow.io documentation
             const weatherDescriptions = {
                 "0": "Unknown",
-                "1000": "Clear, Sunny",
+                "1000": "Clear and Sunny",
                 "1100": "Mostly Clear",
                 "1101": "Partly Cloudy",
                 "1102": "Mostly Cloudy",
@@ -103,27 +112,73 @@ export default {
             } else {
                 return "Mixed Conditions";
             }
+        },
+        getWeatherImage(weatherCode) {
+            let imageUrl = '';
+            switch (weatherCode) {
+                case 1000:
+                case 1100:
+                    imageUrl = sunImage;
+                    break;
+                case 1101:
+                case 1102:
+                    imageUrl = partlyCloudyImage;
+                    break;
+                case 1001:
+                case 2000:
+                case 2100:
+                    imageUrl = cloudyImage;
+                    break;
+                case 4000:
+                case 4001:
+                case 4200:
+                case 4201:
+                case 6000:
+                case 6001:
+                case 6200:
+                case 6201:
+                case 8000:
+                    imageUrl = rainImage;
+                    break;
+                case 5000:
+                case 5001:
+                case 5100:
+                case 5101:
+                case 7000:
+                case 7101:
+                case 7102:
+                    imageUrl = snowImage;
+                    break;
+                default:
+                    imageUrl = '';
+                    break;
+            }
+            return imageUrl;
         }
     }
 };
 </script>
 
 <style scoped>
+.weather-widget {
+    background-color: darkblue;
+}
 .temperature {
     font-size: 50px;
     font-weight: bold;
-    color: lightskyblue;
+    color: white;
 }
 .value {
-    color: lightskyblue;
+    color: darkblue;
 }
 .additional-data {
-  background-color: black;
+  background-color: white;
   border-radius: 5px;
   padding: 10px;
   margin-top: 10px;
 }
 .additional-data p {
   margin: 0;
+  color: black;
 }
 </style>

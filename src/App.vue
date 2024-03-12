@@ -1,7 +1,7 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-5" style="font-family: Verdana, Geneva, sans-serif;">
     <div class="row"> 
-      <div class="col-md-8 card p-3 ">
+      <div class="col-md-8 card p-3">
         <h1 class="mb-4 text-center">Today's Tasks</h1>
         <add-task @taskAdded="addTask"></add-task>
         <task-list :tasks="tasks" @taskEdited="editTask" @taskDeleted="deleteTask" @taskCompleted="completeTask"></task-list>
