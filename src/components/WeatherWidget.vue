@@ -9,6 +9,7 @@
         </div> 
         <div v-else>
             <p class="temperature">Current Temperature: {{ weather.temperature }}°{{ temperatureUnit }}</p>
+            <p class="weather">Weather: {{ weather.weatherDescription }}</p>
         </div>
   </div>
 </template>
@@ -21,6 +22,7 @@ export default {
         return {
             locationName: 'Boston, MA',
             temperatureUnit: 'C',
+            weather: null,
             loading: true,
             error: ''
         };
@@ -33,7 +35,7 @@ export default {
             const apiKey = 'kLMmv1mzAVsMUWA84cRVZuLn7CwSX4HZ';
             const latitude = '42.3601';
             const longitude = '-71.0589';
-            const url = `https://api.tomorrow.io/v4/timelines?location=${latitude},${longitude}&fields=temperature&units=metric&timesteps=current&apikey=${apiKey}`;
+            const url = `https://api.tomorrow.io/v4/timelines?location=${latitude},${longitude}&fields=temperature,weatherCode&units=metric&timesteps=current&apikey=${apiKey}`;
 
             try {
                 const response = await axios.get(url);
@@ -44,11 +46,47 @@ export default {
                 const currentWeather = data.data.timelines[0].intervals[0].values;
                 this.weather = {
                     temperature: currentWeather.temperature,
+                    weatherDescription: this.getWeatherDescription(currentWeather.weatherCode)
                 };
             } catch (error) {
                 this.error = 'Failed to fetch weather data. Please try again later.';
             } finally {
                 this.loading = false;
+            }
+        },
+        getWeatherDescription(weatherCode) {
+            //got information on weather codes from tomorrow.io documentation
+            const weatherDescriptions = {
+                "0": "Unknown",
+                "1000": "Clear, Sunny",
+                "1100": "Mostly Clear",
+                "1101": "Partly Cloudy",
+                "1102": "Mostly Cloudy",
+                "1001": "Cloudy",
+                "2000": "Fog",
+                "2100": "Light Fog",
+                "4000": "Drizzle",
+                "4001": "Rain",
+                "4200": "Light Rain",
+                "4201": "Heavy Rain",
+                "5000": "Snow",
+                "5001": "Flurries",
+                "5100": "Light Snow",
+                "5101": "Heavy Snow",
+                "6000": "Freezing Drizzle",
+                "6001": "Freezing Rain",
+                "6200": "Light Freezing Rain",
+                "6201": "Heavy Freezing Rain",
+                "7000": "Ice Pellets",
+                "7101": "Heavy Ice Pellets",
+                "7102": "Light Ice Pellets",
+                "8000": "Thunderstorm"
+            };
+
+            if (Object.prototype.hasOwnProperty.call(weatherDescriptions, weatherCode)) {
+                return weatherDescriptions[weatherCode];
+            } else {
+                return "Mixed Conditions";
             }
         }
     }
