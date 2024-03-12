@@ -74,7 +74,7 @@ export default {
                 };
             } catch (error) {
                 if(error.response && error.response.status === 429) {
-                    this.error = 'Failed to fetch weather data due to rate limiting. Please try again later.';
+                    this.error = 'Failed to fetch weather data -- too many requests. Please try again later.';
                 }
                 else {
                     this.error = 'Failed to fetch weather data. Please try again later.';
