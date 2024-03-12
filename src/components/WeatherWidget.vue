@@ -1,15 +1,17 @@
 <template>
-    <div class="weather-widget">
-        <h2>{{ locationName }}</h2>
-        <div v-if="loading">
-            <p>Loading...</p>
-        </div>
-        <div v-else-if="error">
-            <p>{{ errorMessage }}</p>
-        </div> 
-        <div v-else>
-            <p class="temperature">Current Temperature: {{ weather.temperature }}°{{ temperatureUnit }}</p>
-            <p class="weather">Weather: {{ weather.weatherDescription }}</p>
+    <div class="weather-widget card bg-secondary text-white text-center mx-auto" style="max-width: 300px;">
+        <div class="card-body">
+            <h2>{{ locationName }}</h2>
+            <div v-if="loading">
+                <p>Loading...</p>
+            </div>
+            <div v-else-if="error">
+                <p>{{ errorMessage }}</p>
+            </div> 
+            <div v-else>
+                <p class="temperature">{{ weather.temperature }}°{{ temperatureUnit }}</p>
+                <p class="weather"><i>Conditions:</i> {{ weather.weatherDescription }}</p>
+            </div>
         </div>
   </div>
 </template>
@@ -21,7 +23,7 @@ export default {
     data() {
         return {
             locationName: 'Boston, MA',
-            temperatureUnit: 'C',
+            temperatureUnit: 'F',
             weather: null,
             loading: true,
             error: ''
@@ -33,9 +35,8 @@ export default {
     methods: {
         async getLocalWeather() {
             const apiKey = 'kLMmv1mzAVsMUWA84cRVZuLn7CwSX4HZ';
-            const latitude = '42.3601';
-            const longitude = '-71.0589';
-            const url = `https://api.tomorrow.io/v4/timelines?location=${latitude},${longitude}&fields=temperature,weatherCode&units=metric&timesteps=current&apikey=${apiKey}`;
+            const cityName = 'boston';
+            const url = `https://api.tomorrow.io/v4/timelines?location=${cityName}&fields=temperature,weatherCode&units=imperial&timesteps=current&apikey=${apiKey}`;
 
             try {
                 const response = await axios.get(url);
@@ -92,3 +93,11 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.temperature {
+    font-size: 50px;
+    font-weight: bold;
+    color: lightskyblue;
+}
+</style>
